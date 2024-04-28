@@ -1,8 +1,7 @@
 import psycopg2
 import pandas as pd
 import orjson as json
-from FetchData import get_data, filter_data
-
+from FetchData import get_final_data
 class Database:
 	def __init__(self, dbname: str, user: str, password: str, host: str, port: str):
 		self.dbname = dbname
@@ -66,7 +65,7 @@ if __name__ == "__main__":
 	dashboard.connect()
 	manager.connect()
 	
-	data = filter_data(get_data("https://itaipeiparking.pma.gov.taipei/MapAPI/GetAllPOIData"))
+	data = get_final_data()
 
 	# 把 data insert進去PostgreSQL public.city_parking_info
 	for i in range(len(data)):
