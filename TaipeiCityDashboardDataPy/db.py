@@ -93,10 +93,11 @@ if __name__ == "__main__":
 		tel = data.loc[i, 'tel']
 		pregnancy_First = data.loc[i, 'pregnancy_First']
 		remark = data.loc[i, 'remark']
+		_type = data.loc[i, 'Type']
 
 		query = f"""
-		INSERT INTO public.city_parking_info ("address", "carTotalNum", "carRemainderNum", "motorTotalNum", "motorRemainderNum", "payex", "parkName", "parkId", "entrance_address", "lat", "lon", "servicetime", "tel", "pregnancy_First", "remark")
-		VALUES ('{address}', {carTotalNum}, {carRemainderNum}, {motorTotalNum}, {motorRemainderNum}, '{payex}', '{parkName}', '{parkId}', '{entrance_address}', {lat}, {lon}, '{servicetime}', '{tel}', {pregnancy_First}, '{remark}');
+		INSERT INTO public.city_parking_info ("address", "carTotalNum", "carRemainderNum", "motorTotalNum", "motorRemainderNum", "payex", "parkName", "parkId", "entrance_address", "lat", "lon", "servicetime", "tel", "pregnancy_First", "remark", "type")
+		VALUES ('{address}', {carTotalNum}, {carRemainderNum}, {motorTotalNum}, {motorRemainderNum}, '{payex}', '{parkName}', '{parkId}', '{entrance_address}', {lat}, {lon}, '{servicetime}', '{tel}', {pregnancy_First}, '{remark}', '{_type}');
 		"""
 
 		dashboard.execute(query)
