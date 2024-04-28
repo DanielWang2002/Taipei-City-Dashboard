@@ -1,0 +1,4 @@
+orjson==3.10.1
+pandas==2.2.2
+psycopg2_binary==2.9.9
+Requests==2.31.0
