@@ -1,6 +1,6 @@
 from llama_cpp import Llama	
 import torch
-
+from sentence_transformers import SentenceTransformer, util
 
 
 
@@ -14,7 +14,35 @@ class LLM():
 		
 	
 		self.prompt ='Q: What are the names of the days of the week? A:'
+		self.model = SentenceTransformer("all-MiniLM-L6-v2")
+		self.content_file_path = "TaipeiCityDashboardDataPy/db/conten.txt"
+
+	def cos_similarity(self,user_input,top_k = 3):
+		contents = []
+
+		with open(self.content_file_path,'r') as file:
+			contents = file.readlines()
 		
+		contents_embedding = []
+		for content in contents:
+			contents_embedding.append(self.model.encode(content))
+		
+		input_embedding = self.model.encode([user_input])
+
+		cos_scores = util.cos_sim(input_embedding, contents_embedding)[0]
+		# Adjust top_k if it's greater than the number of available scores
+		top_k = min(top_k, len(cos_scores))
+		# Sort the scores and get the top-k indices
+		top_indices = torch.topk(cos_scores, k=top_k)[1].tolist()
+		# Get the corresponding context from the vault
+
+		relevant_context = [contents[idx].strip() for idx in top_indices]
+		print(f"relevant_context :{relevant_context}")
+
+		return relevant_context
+
+		
+
 	def text_generate(self,prompt):
 	
 
@@ -26,14 +54,16 @@ class LLM():
 		)
 	
 		print(output["choices"][0]["text"])
-
+		
 
 
 
 if __name__ == "__main__":
 	llm = LLM()
-	prompt ="role:你叫做王昱翔，你喜歡生魚片、目前是中興大學的研究生、居住於屏東萬丹、有一台貨車 Q:你是誰？ A: "
-	file_path ='/Users/zhouchenghan/vue-project/Taipei-City-Dashboard/TaipeiCityDashboardDataPy/db/conten.txt'
+	user_input = '時間旅行者的名字'
+	top_k_content = llm.cos_similarity(user_input=user_input,top_k=3)
+
+	prompt =f"role:你會根據以下內容回答問題{top_k_content} Q:{user_input} A: "
 	
 
 
