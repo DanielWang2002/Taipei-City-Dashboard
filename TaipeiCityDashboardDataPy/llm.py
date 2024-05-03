@@ -2,22 +2,19 @@ from llama_cpp import Llama
 import torch
 from sentence_transformers import SentenceTransformer, util
 
-
-
 class LLM():
 	def __init__(self) -> None:
-		self.llm = Llama(model_path="/Users/zhouchenghan/vue-project/Taipei-City-Dashboard/TaipeiCityDashboardDataPy/model/Phi 3 mini 128k instruct.gguf",
+		self.llm = Llama(model_path="./Phi 3 Mini 128k Instruct.gguf",
 			n_ctx=4096,  # The max sequence length to use - note that longer sequence lengths require much more resources
 			n_threads=8, # The number of CPU threads to use, tailor to your system and the resulting performance
 			n_gpu_layers=35, # The number of layers to offload to GPU, if you have GPU acceleration available. Set to 0 if no GPU acceleration is available on your system.
 			)
-		
 	
 		self.prompt ='Q: What are the names of the days of the week? A:'
 		self.model = SentenceTransformer("all-MiniLM-L6-v2")
-		self.content_file_path = "TaipeiCityDashboardDataPy/db/conten.txt"
+		self.content_file_path = "./db/content.txt"
 
-	def cos_similarity(self,user_input,top_k = 3):
+	def cos_similarity(self, user_input, top_k=3):
 		contents = []
 
 		with open(self.content_file_path,'r') as file:
@@ -41,11 +38,7 @@ class LLM():
 
 		return relevant_context
 
-		
-
-	def text_generate(self,prompt):
-	
-
+	def text_generate(self, prompt: str) -> str:
 		output = self.llm(
 		f"<|user|>\n{prompt}<|end|>\n<|assistant|>",
 		max_tokens=256,  # Generate up to 256 tokens
@@ -53,10 +46,8 @@ class LLM():
 		echo=True,  # Whether to echo the prompt
 		)
 	
-		print(output["choices"][0]["text"])
-		
-
-
+		# print(output["choices"][0]["text"])
+		return output["choices"][0]["text"].split("<|assistant|> ")[1]
 
 if __name__ == "__main__":
 	llm = LLM()
@@ -64,7 +55,5 @@ if __name__ == "__main__":
 	top_k_content = llm.cos_similarity(user_input=user_input,top_k=3)
 
 	prompt =f"role:你會根據以下內容回答問題{top_k_content} Q:{user_input} A: "
-	
-
 
 	llm.text_generate(prompt=prompt)
