@@ -8,6 +8,7 @@ import { useMapStore } from "../../../store/mapStore";
 import { useAuthStore } from "../../../store/authStore";
 
 import SideBarTab from "../miscellaneous/SideBarTab.vue";
+import ChatSideView from "../../chat/ChatSideView.vue";
 
 const contentStore = useContentStore();
 const dialogStore = useDialogStore();
@@ -101,6 +102,7 @@ onMounted(() => {
 			:expanded="isExpanded"
 			index="map-layers"
 		/>
+		<ChatSideView />
 
 		<button class="sidebar-collapse-button" @click="toggleExpand">
 			<span>{{
