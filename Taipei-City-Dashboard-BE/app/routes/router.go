@@ -26,6 +26,7 @@ func ConfigureRoutes() {
 	configureComponentRoutes()
 	configureDashboardRoutes()
 	configureIssueRoutes()
+	configureLLMRoutes()
 }
 
 func configureAuthRoutes() {
@@ -77,6 +78,15 @@ func configureComponentRoutes() {
 		componentRoutes.
 			PATCH("/:id/chart", controllers.UpdateComponentChartConfig)
 		componentRoutes.PATCH("/:id/map", controllers.UpdateComponentMapConfig)
+	}
+}
+
+func configureLLMRoutes() {
+	llmRoutes := RouterGroup.Group("/llm")
+	llmRoutes.Use(middleware.LimitAPIRequests(global.LLMLimitAPIRequestsTimes, global.LimitRequestsDuration))
+	llmRoutes.Use(middleware.LimitTotalRequests(global.LLMLimitTotalRequestsTimes, global.LimitRequestsDuration))
+	{
+		llmRoutes.POST("/", controllers.HandleLLMRequest)
 	}
 }
 
