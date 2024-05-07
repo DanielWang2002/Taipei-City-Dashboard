@@ -102,7 +102,7 @@ onMounted(() => {
 			:expanded="isExpanded"
 			index="map-layers"
 		/>
-		<ChatSideView />
+		<!-- <ChatSideView />  -->
 
 		<button class="sidebar-collapse-button" @click="toggleExpand">
 			<span>{{
