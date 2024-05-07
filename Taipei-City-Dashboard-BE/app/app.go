@@ -33,7 +33,7 @@ func StartApplication() {
 	routes.ConfigureRoutes()
 
 	// 5. Configure http server
-    addr := global.GinAddr
+	addr := global.GinAddr
 
 	err := endless.ListenAndServe(addr, routes.Router)
 	if err != nil {
