@@ -10,7 +10,10 @@
 		</div>
 		<div class="message-div">
 			<div v-for="message in messages" :key="message.id" class="message">
-				<p>{{ message.text }}</p>
+				<div class="message-content">
+					<span class="material-icons-round">{{ inputStatus }}</span>
+					<p>{{ message.text }}</p>
+				</div>
 			</div>
 		</div>
 
@@ -24,7 +27,11 @@
 				></textarea>
 			</div>
 			<div class="icon-div">
-				<button @click="sendMessage" class="material-icons-round">
+				<button
+					@click="sendMessage"
+					id="btn-icon"
+					class="material-icons-round"
+				>
 					send
 				</button>
 			</div>
@@ -37,7 +44,7 @@ import { ref } from "vue";
 
 const messages = ref([]);
 const newMessage = ref("");
-
+const inputStatus = ref("");
 function sendMessage() {
 	if (newMessage.value.trim()) {
 		const message = {
@@ -46,22 +53,30 @@ function sendMessage() {
 		};
 		messages.value.push(message);
 		newMessage.value = "";
+		inputStatus.value = "person";
 	}
+}
+function getResponse() {
+	// get response from LLM
+	// inputStatus.value = "smart_toy";
 }
 </script>
 <style scoped>
 .content {
-	background-color: rgba(
-		238.00000101327896,
-		243.00000071525574,
-		237.0000010728
-	);
-	height: 500px;
-	width: 500px;
+	background-color: rgb(226, 231, 225);
+	height: 70%;
+	width: 60%;
 	z-index: 100;
-	position: relative;
+	position: fixed; /* 使用 fixed 或 absolute 都可 */
+	top: 50%; /* 設置 top 和 left 至 50% 來將容器中心對齊頁面中心 */
+	left: 50%;
+	transform: translate(
+		-50%,
+		-50%
+	); /* 使用 transform 移動元素位置使其完全居中 */
 	border-radius: 15px;
 }
+
 .content-header {
 	width: 100%;
 	height: 10%;
@@ -70,13 +85,13 @@ function sendMessage() {
 		243.00000071525574,
 		237.0000010728
 	);
-	border-radius: 50px;
+	border-radius: 20px;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	margin-bottom: 20px;
 }
 .icon-box {
 	width: 100%;
-	top: 5px;
+	top: 15px;
 	position: absolute;
 	left: 20px;
 	display: flex;
@@ -140,14 +155,11 @@ function sendMessage() {
 .message-div {
 	width: calc(100% - 20px); /* 減去左右內距 */
 	height: 80%; /* 保持高度為容器的 90% */
-	background-color: rgba(
-		238.00000101327896,
-		243.00000071525574,
-		237.0000010728
-	);
+	background-color: rgb(226, 231, 225);
 	overflow-y: auto; /* 設置垂直滾動條 */
 	padding: 10px; /* 添加內距 */
 	box-sizing: border-box; /* 包含內距和邊框在內的總寬度和高度 */
+	transform: translate(0%, 0%); /* 使用 transform 移動元素位置使其完全居中 */
 }
 
 .message {
@@ -157,14 +169,27 @@ function sendMessage() {
 	padding: 8px; /* 消息內距 */
 	word-wrap: break-word; /* 長單詞或 URL 自動換行 */
 }
+.message-content {
+	display: flex; /* 使用 flex 布局 */
+	align-items: center; /* 垂直居中對齊內容 */
+}
+
+.message-content .material-icons-round {
+	margin-right: 10px; /* 圖標和文字之間的距離 */
+}
+
+.message p {
+	margin: 0; /* 移除 p 標籤的外邊距 */
+}
 
 .text-div {
-	width: 90%;
+	width: 95%;
+	height: 80px;
 }
 .text-area {
 	overflow-y: hidden;
-	height: 44px;
-	line-height: 44px;
+	height: 70px;
+	line-height: 70px;
 	padding-top: 5px;
 	padding-bottom: 0;
 	padding-left: 10px;
@@ -175,7 +200,7 @@ function sendMessage() {
 
 .input-area {
 	width: 100%;
-	height: 50px;
+	height: 60px;
 	background-color: rgba(129, 156, 175, 1);
 	position: absolute;
 	bottom: 0px;
@@ -186,5 +211,15 @@ function sendMessage() {
 }
 .text-area::placeholder {
 	color: rgb(218, 230, 235);
+}
+.material-icons-round {
+	background-color: rgb(226, 231, 225);
+}
+#btn-icon {
+	height: 200px;
+	width: 100%;
+}
+.icon-div {
+	width: 7%;
 }
 </style>
