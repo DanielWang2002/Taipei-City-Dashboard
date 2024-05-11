@@ -1,37 +1,68 @@
 package controllers
 
 import (
-    "net/http"
+	"bytes"
+	"encoding/json"
+	"io"
+	"log"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-    "bytes"
-    "io/ioutil"
-    "log"
 )
 
+type JSONRPCResponse struct {
+	ID      int    `json:"id"`
+	JSONRPC string `json:"jsonrpc"`
+	Result  string `json:"result"`
+}
+
+type Response struct {
+	Role     string `json:"role"`
+	Response string `json:"response"`
+}
+
 func HandleLLMRequest(c *gin.Context) {
-    w := c.Writer
-    r := c.Request
-    jsonRPCServerURL := "http://json_rpc_server:5555"
-    // 假設你從前端收到的數據是以 JSON 格式在請求體中
-    requestBody, err := ioutil.ReadAll(r.Body)
-    if err != nil {
-        http.Error(w, "Error reading request body", http.StatusInternalServerError)
-        return
-    }
+	w := c.Writer
+	r := c.Request
+	jsonRPCServerURL := "http://json_rpc_server:5555"
 
-    resp, err := http.Post(jsonRPCServerURL, "application/json", bytes.NewBuffer(requestBody))
-    if err != nil {
-        log.Fatalf("Error contacting JSON RPC server: %v", err)
-        http.Error(w, "Error contacting JSON RPC server", http.StatusInternalServerError)
-        return
-    }
-    defer resp.Body.Close()
-    responseBody, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        http.Error(w, "Error reading response body", http.StatusInternalServerError)
-        return
-    }
+	requestBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
 
-    w.Header().Set("Content-Type", "application/json")
-    w.Write(responseBody)
+	resp, err := http.Post(jsonRPCServerURL, "application/json", bytes.NewBuffer(requestBody))
+	if err != nil {
+		log.Printf("Error contacting JSON RPC server: %v", err)
+		http.Error(w, "Error contacting JSON RPC server", http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
+
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, "Error reading response body", http.StatusInternalServerError)
+		return
+	}
+
+	var rpcResp JSONRPCResponse
+	if err := json.Unmarshal(responseBody, &rpcResp); err != nil {
+		http.Error(w, "Error parsing JSON response", http.StatusInternalServerError)
+		return
+	}
+
+	responseStruct := Response{
+		Role:     "tpe",
+		Response: rpcResp.Result,
+	}
+
+	jsonResponse, err := json.Marshal(responseStruct)
+	if err != nil {
+		http.Error(w, "Error marshalling JSON", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResponse)
 }
