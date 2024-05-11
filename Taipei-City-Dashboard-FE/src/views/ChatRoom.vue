@@ -5,12 +5,18 @@
 				<p>{{ message.text }}</p>
 			</div>
 		</div>
-		<input
-			class="inputbar"
-			v-model="newMessage"
-			@keyup.enter="sendMessage"
-			placeholder="Type a message..."
-		/>
+		<div class="input-area">
+			<!-- 新增容器用於並排顯示 -->
+			<input
+				class="inputbar"
+				v-model="newMessage"
+				@keyup.enter="sendMessage"
+				placeholder="Type a message..."
+			/>
+			<button @click="sendMessage" class="material-icons-round">
+				send
+			</button>
+		</div>
 	</div>
 </template>
 
@@ -41,18 +47,20 @@ function sendMessage() {
 	height: 30px;
 }
 .chatroom {
-	background-color: #f9f9f9;
+	background-color: #fff;
 	max-width: 600px;
-	margin: 20px auto;
-	padding: 20px;
+	/* margin: 20px auto; */
+	padding: 10px;
 	border-radius: 8px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	/* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+	height: 90%;
+	width: 90%;
 }
 
 .messages {
-	height: 300px;
+	height: 50%;
 	overflow-y: auto;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 	padding: 10px;
 	background: white;
 	border: 1px solid #ccc;
@@ -69,5 +77,40 @@ input {
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
+}
+.material-icons-round {
+	color: black;
+}
+.input-area {
+	display: flex; /* 設置為 flex 布局 */
+	align-items: center; /* 垂直居中對齊 */
+}
+
+.inputbar {
+	flex-grow: 1; /* 讓 input 擴展填滿多餘空間 */
+	margin-right: 10px; /* 在 button 和 input 之間添加一些空間 */
+	color: black;
+	padding: 10px;
+	font-size: 12px;
+	height: 30px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.material-icons-round {
+	cursor: pointer; /* 添加指針游標，使按鈕看起來可點擊 */
+	background-color: #eee; /* 為按鈕添加背景色 */
+	border: none; /* 去掉邊框 */
+	padding: 10px;
+	border-radius: 4px;
+	height: 50px; /* 確保按鈕高度與輸入框相匹配 */
+	width: 50px; /* 設置按鈕寬度 */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.material-icons-round:hover {
+	background-color: #ddd; /* 滑鼠懸停效果 */
 }
 </style>
