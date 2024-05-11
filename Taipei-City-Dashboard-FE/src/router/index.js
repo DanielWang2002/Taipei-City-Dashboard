@@ -17,11 +17,17 @@ import MapView from "../views/MapView.vue";
 import ComponentView from "../views/ComponentView.vue";
 import ComponentInfoView from "../views/ComponentInfoView.vue";
 import EmbedView from "../views/EmbedView.vue";
+import ChatRoomPage from "../views/ChatRoomPage.vue";
 
 const routes = [
 	{
 		path: "/",
 		redirect: "/dashboard",
+	},
+	{
+		path: "/chatroom",
+		name: "chatroom",
+		component: ChatRoomPage,
 	},
 	{
 		path: "/callback",
