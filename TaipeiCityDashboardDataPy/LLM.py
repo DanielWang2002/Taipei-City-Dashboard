@@ -1,10 +1,11 @@
 from llama_cpp import Llama	
 import torch
 from sentence_transformers import SentenceTransformer, util
+import pickle
 
 class LLM():
 	def __init__(self) -> None:
-		self.llm = Llama(model_path="./Phi 3 Mini 128k Instruct.gguf",
+		self.llm = Llama(model_path="TaipeiCityDashboardDataPy/Phi 3 mini 128k instruct.gguf",
 			n_ctx=4096,  # The max sequence length to use - note that longer sequence lengths require much more resources
 			n_threads=8, # The number of CPU threads to use, tailor to your system and the resulting performance
 			n_gpu_layers=35, # The number of layers to offload to GPU, if you have GPU acceleration available. Set to 0 if no GPU acceleration is available on your system.
@@ -12,8 +13,24 @@ class LLM():
 	
 		self.prompt ='Q: What are the names of the days of the week? A:'
 		self.model = SentenceTransformer("all-MiniLM-L6-v2")
-		self.content_file_path = "./db/content.txt"
+		self.content_file_path = "TaipeiCityDashboardDataPy/db/content.txt"
 
+    # def content_embedding(self):
+	def content_embedding(self):	
+
+		contents = []
+
+		with open(self.content_file_path,'r') as file:
+			contents = file.readlines()
+			
+		contents_embedding = []
+		for content in contents:
+			contents_embedding.append(self.model.encode(content))
+
+		with open('TaipeiCityDashboardDataPy/db/embedding.pkl', 'wb') as pkl_file:
+			pickle.dump(contents_embedding,pkl_file)
+		
+    
 	def cos_similarity(self, user_input, top_k=3):
 		contents = []
 
@@ -21,9 +38,12 @@ class LLM():
 			contents = file.readlines()
 		
 		contents_embedding = []
-		for content in contents:
-			contents_embedding.append(self.model.encode(content))
 		
+		with open('TaipeiCityDashboardDataPy/db/embedding.pkl', 'rb') as pkl_file:
+					contents_embedding = pickle.load(pkl_file)
+
+
+
 		input_embedding = self.model.encode([user_input])
 
 		cos_scores = util.cos_sim(input_embedding, contents_embedding)[0]
@@ -46,14 +66,15 @@ class LLM():
 		echo=True,  # Whether to echo the prompt
 		)
 	
-		# print(output["choices"][0]["text"])
+		print(output["choices"][0]["text"])
 		return output["choices"][0]["text"].split("<|assistant|> ")[1]
 
 if __name__ == "__main__":
 	llm = LLM()
-	user_input = '時間旅行者的名字'
+	user_input = '火災時該怎麼辦'
 	top_k_content = llm.cos_similarity(user_input=user_input,top_k=3)
 
-	prompt =f"role:你會根據以下內容回答問題{top_k_content} Q:{user_input} A: "
+	prompt =f"role:你會根據以下內容回答問題並以繁體中文回答，{top_k_content} Q:{user_input} A: "
 
 	llm.text_generate(prompt=prompt)
+	# llm.content_embedding()
