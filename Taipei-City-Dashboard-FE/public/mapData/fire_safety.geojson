@@ -1,0 +1,121 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u4fe1\u7fa9\u5340\u677e\u4ec1\u8def89\u865fB2\u6a13"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5685, 25.0374] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u842c\u83ef\u5340\u74b0\u6cb3\u5357\u8def2\u6bb5227\u865f1\u6a13"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.4912, 25.0316] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u5927\u5b89\u5340\u7f85\u65af\u798f\u8def2\u6bb591\u865fB1\u6a13"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5238, 25.0253] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u5317\u6295\u5340\u4e2d\u548c\u8857524\u865f1\u6a13"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.4937, 25.1455] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u4fe1\u7fa9\u5340\u57fa\u9686\u8def1\u6bb5350\u865f"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5617, 25.037] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u5927\u540c\u5340\u5929\u6c34\u8def51\u5df75\u865f"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5128, 25.0531] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u5317\u6295\u5340\u516c\u9928\u8def427\u865f1\u6a13"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5025, 25.1206] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u4fe1\u7fa9\u5340\u677e\u58fd\u8def22\u865fB1"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5677, 25.0356] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u5927\u540c\u5340\u91cd\u6176\u5317\u8def1\u6bb526\u5df751\u865f1~3\u6a13"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5125, 25.0512] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u4e2d\u5c71\u5340\u5efa\u570b\u5317\u8def2\u6bb5123\u865f2\u6a13"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5373, 25.0597] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u677e\u5c71\u5340\u5e02\u6c11\u5927\u90534\u6bb5219\u865f1\u6a13"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5533, 25.0446] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u4e2d\u5c71\u5340\u6c11\u65cf\u6771\u8def336\u865f"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5373, 25.0679] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u5927\u5b89\u5340\u548c\u5e73\u6771\u8def2\u6bb5365\u865f"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5465, 25.0249] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u4fe1\u7fa9\u5340\u5fe0\u5b5d\u6771\u8def5\u6bb571\u5df76"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5672, 25.0417] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u5927\u5b89\u5340\u5fa9\u8208\u5357\u8def1\u6bb5107\u5df75\u5f0425\u865f"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5454, 25.0445] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "addr": "\u81fa\u5317\u5e02\u5927\u5b89\u5340\u5fa9\u8208\u5357\u8def1\u6bb5107\u5df75\u5f0427"
+      },
+      "geometry": { "type": "Point", "coordinates": [121.5456, 25.0437] }
+    }
+  ]
+}
