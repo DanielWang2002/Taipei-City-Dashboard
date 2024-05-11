@@ -11,7 +11,9 @@
 		<div class="message-div">
 			<div v-for="message in messages" :key="message.id" class="message">
 				<div class="message-content">
-					<span class="material-icons-round">{{ inputStatus }}</span>
+					<span class="material-icons-round">{{
+						message.inputStatus
+					}}</span>
 					<p>{{ message.text }}</p>
 				</div>
 			</div>
@@ -48,12 +50,13 @@ const newMessage = ref("");
 const inputStatus = ref("");
 async function sendMessage() {
 	if (newMessage.value.trim()) {
+		inputStatus.value = "person";
 		const message = {
 			id: messages.value.length + 1,
 			text: newMessage.value,
+			inputStatus: inputStatus.value,
 		};
 		messages.value.push(message);
-		inputStatus.value = "person";
 
 		await getResponse(newMessage.value);
 		newMessage.value = "";
@@ -81,6 +84,7 @@ async function getResponse(message) {
 			const message = {
 				id: messages.value.length + 1,
 				text: newMessage.value,
+				inputStatus: inputStatus.value,
 			};
 
 			messages.value.push(message);
