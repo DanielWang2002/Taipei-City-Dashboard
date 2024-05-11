@@ -2,6 +2,7 @@ import psycopg2
 import pandas as pd
 import orjson as json
 from FetchData import get_final_data
+
 class Database:
 	def __init__(self, dbname: str, user: str, password: str, host: str, port: str):
 		self.dbname = dbname
