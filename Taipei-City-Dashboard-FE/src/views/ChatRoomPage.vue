@@ -41,24 +41,55 @@
 
 <script setup>
 import { ref } from "vue";
+import http from "../router/axios";
 
 const messages = ref([]);
 const newMessage = ref("");
 const inputStatus = ref("");
-function sendMessage() {
+async function sendMessage() {
 	if (newMessage.value.trim()) {
 		const message = {
 			id: messages.value.length + 1,
 			text: newMessage.value,
 		};
 		messages.value.push(message);
-		newMessage.value = "";
 		inputStatus.value = "person";
+
+		await getResponse(newMessage.value);
+		newMessage.value = "";
 	}
 }
-function getResponse() {
+async function getResponse(message) {
 	// get response from LLM
 	// inputStatus.value = "smart_toy";
+	try {
+		// 調用 API 並取得回應
+		const response = await http.post("/llm/", {
+			jsonrpc: "2.0",
+			method: "GetResponseFromLLM",
+			params: [5, message],
+			id: 1,
+		});
+
+		// 處理 API 回應
+		if (response.data.result) {
+			const res = response.data;
+			if (res.role == "tpe") {
+				inputStatus.value = "smart_toy";
+			}
+
+			const message = {
+				id: messages.value.length + 1,
+				text: newMessage.value,
+			};
+
+			messages.value.push(message);
+		} else {
+			console.error("API 回應中缺少結果");
+		}
+	} catch (error) {
+		console.error("調用 API 時出錯:", error);
+	}
 }
 </script>
 <style scoped>

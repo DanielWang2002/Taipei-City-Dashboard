@@ -17,8 +17,8 @@ type JSONRPCResponse struct {
 }
 
 type Response struct {
-	Role     string `json:"role"`
-	Response string `json:"response"`
+	Role   string `json:"role"`
+	Result string `json:"result"`
 }
 
 func HandleLLMRequest(c *gin.Context) {
@@ -53,8 +53,8 @@ func HandleLLMRequest(c *gin.Context) {
 	}
 
 	responseStruct := Response{
-		Role:     "tpe",
-		Response: rpcResp.Result,
+		Role:   "tpe",
+		Result: rpcResp.Result,
 	}
 
 	jsonResponse, err := json.Marshal(responseStruct)

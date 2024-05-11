@@ -22,11 +22,12 @@
 
 <script setup>
 import { ref } from "vue";
+import http from "../router/axios";
 
 const messages = ref([]);
 const newMessage = ref("");
 
-function sendMessage() {
+async function sendMessage() {
 	if (newMessage.value.trim()) {
 		const message = {
 			id: messages.value.length + 1,
@@ -34,6 +35,31 @@ function sendMessage() {
 		};
 		messages.value.push(message);
 		newMessage.value = "";
+
+		try {
+			// 調用 API 並取得回應
+			const response = await http.post("/llm/", {
+				jsonrpc: "2.0",
+				method: "GetResponseFromLLM",
+				params: [5, message.text],
+				id: 1,
+			});
+			console.log(response);
+
+			// 處理 API 回應
+			if (response.data.result) {
+				const llmMessage = {
+					id: messages.value.length + 1,
+					text: response.data.result,
+				};
+				messages.value.push(llmMessage);
+				console.log(messages);
+			} else {
+				console.error("API 回應中缺少結果");
+			}
+		} catch (error) {
+			console.error("調用 API 時出錯:", error);
+		}
 	}
 }
 </script>
