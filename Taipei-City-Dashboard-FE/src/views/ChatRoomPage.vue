@@ -57,9 +57,9 @@ async function sendMessage() {
 			inputStatus: inputStatus.value,
 		};
 		messages.value.push(message);
-
-		await getResponse(newMessage.value);
+		const processingMessage = newMessage.value;
 		newMessage.value = "";
+		await getResponse(processingMessage);
 	}
 }
 async function getResponse(message) {
@@ -83,7 +83,7 @@ async function getResponse(message) {
 
 			const message = {
 				id: messages.value.length + 1,
-				text: newMessage.value,
+				text: res.result,
 				inputStatus: inputStatus.value,
 			};
 
