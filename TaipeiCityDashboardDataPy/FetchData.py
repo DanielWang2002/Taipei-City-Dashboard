@@ -53,45 +53,6 @@ class DataFetcher():
 
 
 if __name__ == "__main__":
-	# 消防安檢重大不合格建築物
-	fire_safety = DataFetcher(
-		name="FireSafety",
-		url="https://data.taipei/api/v1/dataset/d417e957-7205-451e-bf45-a31db78f6ec8?scope=resourceAquire",
-		method="GET",
-		headers = {
-			'Cookie': 'FRONT_PHPSESSID=aitp1m4p0t2b2mvpjo8hdukhro'
-		},
-		params={
-			'limit': 10
-		}
-	)
-
-	# 地震列管黃單建築物
-	earthquake_managed_buildings = DataFetcher(
-		name="EarthquakeManagedBuildings",
-		url="https://data.taipei/api/v1/dataset/a6e8f08e-ec2a-4be7-a762-54452b0c27df?scope=resourceAquire",
-		method="GET",
-		headers = {
-			'Cookie': 'FRONT_PHPSESSID=aitp1m4p0t2b2mvpjo8hdukhro'
-		},
-		params={
-			'limit': 10
-		}
-	)
-
-	# 火災搶救困難地區
-	fire_difficult_areas = DataFetcher(
-		name="FireDifficultAreas",
-		url="https://data.taipei/api/v1/dataset/577b3810-49b7-44fd-a5b7-97897bb50f9e?scope=resourceAquire",
-		method="GET",
-		headers = {
-			'Cookie': 'FRONT_PHPSESSID=aitp1m4p0t2b2mvpjo8hdukhro'
-		},
-		params={
-			'limit': 10
-		}
-	)
-
 	# 災害應變避難所
 	evacuation_shelter = DataFetcher(
 		name="EvacuationShelter",

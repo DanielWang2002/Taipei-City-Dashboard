@@ -69,7 +69,7 @@ async function getResponse(message) {
 		const response = await http.post("/llm/", {
 			jsonrpc: "2.0",
 			method: "GetResponseFromLLM",
-			params: [5, message],
+			params: [3, message],
 			id: 1,
 		});
 
@@ -196,12 +196,10 @@ async function getResponse(message) {
 	align-items: center; /* 垂直居中對齊內容 */
 }
 
-.message-content .material-icons-round {
-	margin-right: 10px; /* 圖標和文字之間的距離 */
-}
-
 .message p {
 	margin: 0; /* 移除 p 標籤的外邊距 */
+	color: black;
+	font-size: 14px;
 }
 .text-div {
 	width: 80%;
@@ -234,6 +232,13 @@ async function getResponse(message) {
 }
 .material-icons-round {
 	background-color: rgb(124, 127, 124);
+	width: 24px; /* 固定寬度 */
+	height: 24px; /* 固定高度 */
+	flex-shrink: 0; /* 防止在 flex 容器中被壓縮 */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-right: 10px; /* 圖標和文字之間的距離 */
 }
 #btn-icon {
 	height: 200px;

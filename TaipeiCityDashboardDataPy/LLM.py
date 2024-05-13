@@ -5,7 +5,7 @@ import pickle
 
 class LLM():
 	def __init__(self) -> None:
-		self.llm = Llama(model_path="TaipeiCityDashboardDataPy/Phi 3 mini 128k instruct.gguf",
+		self.llm = Llama(model_path="./Phi 3 mini 128k instruct.gguf",
 			n_ctx=4096,  # The max sequence length to use - note that longer sequence lengths require much more resources
 			n_threads=8, # The number of CPU threads to use, tailor to your system and the resulting performance
 			n_gpu_layers=35, # The number of layers to offload to GPU, if you have GPU acceleration available. Set to 0 if no GPU acceleration is available on your system.
@@ -13,7 +13,7 @@ class LLM():
 	
 		self.prompt ='Q: What are the names of the days of the week? A:'
 		self.model = SentenceTransformer("all-MiniLM-L6-v2")
-		self.content_file_path = "TaipeiCityDashboardDataPy/db/content.txt"
+		self.content_file_path = "./db/content.txt"
 
     # def content_embedding(self):
 	def content_embedding(self):	
@@ -27,7 +27,7 @@ class LLM():
 		for content in contents:
 			contents_embedding.append(self.model.encode(content))
 
-		with open('TaipeiCityDashboardDataPy/db/embedding.pkl', 'wb') as pkl_file:
+		with open('./db/embedding.pkl', 'wb') as pkl_file:
 			pickle.dump(contents_embedding,pkl_file)
 		
     
@@ -39,13 +39,13 @@ class LLM():
 		
 		contents_embedding = []
 		
-		with open('TaipeiCityDashboardDataPy/db/embedding.pkl', 'rb') as pkl_file:
+		with open('./db/embedding.pkl', 'rb') as pkl_file:
 					contents_embedding = pickle.load(pkl_file)
-
+		print(f"content embedding:{contents_embedding[0]}")
 
 
 		input_embedding = self.model.encode([user_input])
-
+		print(f"input_embedding:{input_embedding}")
 		cos_scores = util.cos_sim(input_embedding, contents_embedding)[0]
 		# Adjust top_k if it's greater than the number of available scores
 		top_k = min(top_k, len(cos_scores))
@@ -71,10 +71,10 @@ class LLM():
 
 if __name__ == "__main__":
 	llm = LLM()
-	user_input = '火災時該怎麼辦'
+	user_input = '我的建築被列為黃單是什麼意思？'
 	top_k_content = llm.cos_similarity(user_input=user_input,top_k=3)
 
-	prompt =f"role:你會根據以下內容回答問題並以繁體中文回答，{top_k_content} Q:{user_input} A: "
+	prompt =f"role:你會根據以DB中的內容回答問題 DB:{top_k_content} Q:{user_input} A: "
 
 	llm.text_generate(prompt=prompt)
 	# llm.content_embedding()

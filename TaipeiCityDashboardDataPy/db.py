@@ -1,7 +1,18 @@
-import psycopg2
+import sqlalchemy
 import pandas as pd
 import orjson as json
-from FetchData import get_final_data
+import requests
+
+def addr2WGS84(addr: str) -> tuple:
+	"""
+		地址轉換經緯度
+	"""
+	url = f"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?singleLine={addr}&f=json"
+	data = requests.get(url).json()
+	if data["candidates"]:
+		return data["candidates"][0]["location"]["x"], data["candidates"][0]["location"]["y"]
+	else:
+		return None
 
 class Database:
 	def __init__(self, dbname: str, user: str, password: str, host: str, port: str):
@@ -10,18 +21,12 @@ class Database:
 		self.password = password
 		self.host = host
 		self.port = port
+		self.connection = None
 
 	def connect(self):
 		try:
-			self.connection = psycopg2.connect(
-				dbname=self.dbname,
-				user=self.user,
-				password=self.password,
-				host=self.host,
-				port=self.port
-			)
-			self.cursor = self.connection.cursor()
-			print(f"Connection established successfully with {self.dbname} database")
+			conn_str = f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.dbname}"
+			self.connection = sqlalchemy.create_engine(conn_str)
 		except Exception as e:
 			print(e)
 
@@ -66,39 +71,28 @@ if __name__ == "__main__":
 	dashboard.connect()
 	manager.connect()
 	
-	data = get_final_data()
+	# read ods
+	df = pd.read_excel("./113年臺北市可供避難收容處所一覽表-1130305更新上傳.ods", engine="odf")
+	#df Addr = 縣市,鄉鎮,村里,門牌 連起來
+	df["Addr"] = df["縣市"] + df["鄉鎮"] + df["村里"] + df["門牌"]
+	df['Lat'] = None
+	df['Lon'] = None
+	for i in df.index:
+		lat, lon = addr2WGS84(df.loc[i, "Addr"])
+		df.loc[i, "Lat"] = lat
+		df.loc[i, "Lon"] = lon
+	df.to_csv("evacuation_shelter.csv", index=False)
 
-	# 把 data insert進去PostgreSQL public.city_parking_info
-	for i in range(len(data)):
-		# 使用 .loc 或 .iloc 獲取對應的值
-		address = data.loc[i, 'address']
-		carTotalNum = data.loc[i, 'carTotalNum']
-		carRemainderNum = data.loc[i, 'carRemainderNum']
-		motorTotalNum = data.loc[i, 'motorTotalNum']
-		motorRemainderNum = data.loc[i, 'motorRemainderNum']
-		payex = data.loc[i, 'payex']
-		parkName = data.loc[i, 'parkName']
-		parkId = data.loc[i, 'parkId']
-		entrance_json = data.loc[i, 'entrance']
-		
-		# 處理entrance為None的情況
-		if entrance_json is None:
-			lat = data.loc[i, 'lat']
-			lon = data.loc[i, 'lon']
-		else:
-			entrance_list = json.loads(entrance_json)
-			entrance_address = entrance_list[0].get('Add')
-			lat = entrance_list[0].get('Lat')
-			lon = entrance_list[0].get('Lon')
-		servicetime = data.loc[i, 'servicetime']
-		tel = data.loc[i, 'tel']
-		pregnancy_First = data.loc[i, 'pregnancy_First']
-		remark = data.loc[i, 'remark']
-		_type = data.loc[i, 'Type']
+	# df.to_sql("evacuation_shelter", dashboard.connection, if_exists="replace", index=False)
 
-		query = f"""
-		INSERT INTO public.city_parking_info ("address", "carTotalNum", "carRemainderNum", "motorTotalNum", "motorRemainderNum", "payex", "parkName", "parkId", "entrance_address", "lat", "lon", "servicetime", "tel", "pregnancy_First", "remark", "type")
-		VALUES ('{address}', {carTotalNum}, {carRemainderNum}, {motorTotalNum}, {motorRemainderNum}, '{payex}', '{parkName}', '{parkId}', '{entrance_address}', {lat}, {lon}, '{servicetime}', '{tel}', {pregnancy_First}, '{remark}', '{_type}');
-		"""
-
-		dashboard.execute(query)
+	# df = pd.read_csv("./臺北市急救責任醫院名冊.csv", encoding="big5")
+	# df.drop(columns=["行政區"], inplace=True)
+	# df.rename(columns={"醫院名稱": "Name", "地址": "Addr", "電話": "Tel"}, inplace=True)
+	# df["lat"] = None
+	# df["lon"] = None
+	# for i in df.index:
+	# 	lat, lon = addr2WGS84(df.loc[i, "Addr"])
+	# 	df.loc[i, "lat"] = lat
+	# 	df.loc[i, "lon"] = lon
+	# print(df)
+	# df.to_sql("hospital", dashboard.connection, if_exists="replace", index=False)
